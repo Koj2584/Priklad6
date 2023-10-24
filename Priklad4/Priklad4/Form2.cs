@@ -16,21 +16,23 @@ namespace Priklad4
         public Form2()
         {
             InitializeComponent();
+            button1.Left = (ClientSize.Width - button1.Width) / 2;
+            button1.Top = (ClientSize.Height - button1.Height) / 2;
         }
         int h = 20, w = 50;
         Font f = null;
         Color back = Color.White;
         Color fore = Color.Black;
-        HorizontalAlignment ha = HorizontalAlignment.Center;
-        VerticalAlignment va = VerticalAlignment.Center;
+        System.Drawing.ContentAlignment al = System.Drawing.ContentAlignment.MiddleCenter;
         string textBtn = "Button";
         Button test = new Button();
+        Panel panel;
 
         private void button1_Click(object sender, EventArgs e)
         {
             Form f2 = new Form();
             f2.StartPosition = FormStartPosition.CenterScreen;
-            f2.Size = new Size(400, 500);
+            f2.Size = new Size(400, 530);
             f2.FormBorderStyle = FormBorderStyle.FixedSingle;
 
 
@@ -54,7 +56,7 @@ namespace Priklad4
             num2.Minimum = 20;
             num2.Maximum = 150;
             num2.Location = new Point(50, 50);
-            num.ValueChanged += Num_ValueChanged1;
+            num2.ValueChanged += Num_ValueChanged1;
             f2.Controls.Add(num2);
             f2.Controls.Add(lbl2);
 
@@ -95,7 +97,7 @@ namespace Priklad4
                 for (int y = 0; y < 3; y++)
                 {
                     Button button = new Button();
-                    button.MinimumSize = new Size(x, y);
+                    button.Tag = Math.Pow(16,y)*Math.Pow(2,x);
                     button.Size = new Size(50, 50);
                     button.Location = new Point(185+x*60,35+y*60);
                     button.Click += Button_Click;
@@ -103,57 +105,101 @@ namespace Priklad4
                 }
             }
 
-            Panel panel = new Panel();
+            panel = new Panel();
             panel.Location = new Point(10, 220);
             panel.Size = new Size(365, 230);
             panel.BackColor = Color.WhiteSmoke;
             panel.BorderStyle = BorderStyle.FixedSingle;
             f2.Controls.Add(panel);
+            test.Size = new Size(w, h);
+            test.Text = textBtn;
+            test.BackColor = back;
+            test.ForeColor = fore;
+            test.TextAlign = al;
+            test.Left = (panel.ClientSize.Width - test.Width) / 2;
+            test.Top = (panel.ClientSize.Height - test.Height) / 2;
+            panel.Controls.Add(test);
+
+            Button ok = new Button();
+            ok.Location = new Point(300, 460);
+            ok. Text = "OK";
+            ok.DialogResult = DialogResult.OK;
+            f2.Controls.Add(ok);
+
+            Button zrus = new Button();
+            zrus.Location = new Point(10, 460);
+            zrus.Text = "Zrušit";
+            zrus.DialogResult = DialogResult.Cancel;
+            f2.Controls.Add(zrus);
 
 
-            f2.ShowDialog();
+            if(f2.ShowDialog() == DialogResult.OK)
+            {
+                button1.Size = new Size(w, h);
+                button1.ForeColor = fore;
+                button1.BackColor = back;
+                button1.Font = f;
+                button1.TextAlign = al;
+                button1.Text = textBtn;
+                button1.Left = (ClientSize.Width - button1.Width) / 2;
+                button1.Top = (ClientSize.Height - button1.Height) / 2;
+            }
         }
 
         private void Txt_TextChanged(object sender, EventArgs e)
         {
             textBtn = ((TextBox)sender).Text;
+            test.Text = textBtn;
         }
 
         private void Button_Click(object sender, EventArgs e)
         {
-            va = (VerticalAlignment)MinimumSize.Height;
-            ha = (HorizontalAlignment)MinimumSize.Width;
+            al = (System.Drawing.ContentAlignment)int.Parse(((Button)sender).Tag.ToString());
+            test.TextAlign = al;
         }
 
         private void Num_ValueChanged1(object sender, EventArgs e)
         {
             h = (int)((NumericUpDown)sender).Value;
+            test.Size = new Size(w, h);
+            test.Top = (panel.ClientSize.Height - test.Height) / 2;
         }
 
         private void Num_ValueChanged(object sender, EventArgs e)
         {
             w = (int)((NumericUpDown)sender).Value;
+            test.Size = new Size(w, h);
+            test.Left = (panel.ClientSize.Width - test.Width) / 2;
         }
 
         private void Btn3_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
             if (cd.ShowDialog() == DialogResult.OK)
+            {
                 fore = cd.Color;
+                test.ForeColor = fore;
+            }
         }
 
         private void Btn2_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
             if (cd.ShowDialog() == DialogResult.OK)
+            {
                 back = cd.Color;
+                test.BackColor = back;
+            }
         }
 
         private void Btn_Click(object sender, EventArgs e)
         {
             FontDialog fontDialog = new FontDialog();
-            if(fontDialog.ShowDialog() == DialogResult.OK)
+            if (fontDialog.ShowDialog() == DialogResult.OK)
+            {
                 f = fontDialog.Font;
+                test.Font = f;
+            }
         }
     }
 }
